@@ -3,6 +3,7 @@ package org.acme;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -29,10 +30,10 @@ public class GreetingResource {
     }
 
     @GET
-    @Path("kafka-out")
+    @Path("kafka-out/{data}")
     @Produces(MediaType.TEXT_PLAIN)
-    public String producer() {
-        demoEmitter.send("test");
+    public String producer(@PathParam("data") String data) {
+        demoEmitter.send(data);
         return "Hello from RESTEasy Reactive";
     }    
 
