@@ -11,30 +11,31 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import io.quarkus.logging.Log;
 import io.smallrye.mutiny.Multi;
 
-@Path("/orders")
-public class OrderProducer {
+@Path("/orders-amq")
+public class OrderProducerAMQ {
 
-    @Channel("order-requests")
-    Emitter<String> orderEmitter;
+    @Channel("order-requests-queue")
+    Emitter<String> orderEmitterAmq;
 
     @POST
     @Path("/request")
     @Produces(MediaType.TEXT_PLAIN)
-    public String createOrder() {
+    public String createOrderAMQ() {
         UUID uuid = UUID.randomUUID();
-        Log.info("Customer created a new order " + uuid
-                + ", delivered to Kafka topic and preparing event for processing");
-        orderEmitter.send(uuid.toString());
+        Log.info("Customer created a new order on AMQ " + uuid
+                + ", delivered to AMQ Queue and preparing event for processing");
+        orderEmitterAmq.send(uuid.toString());
         return uuid.toString();
     }
 
-    @Channel("order-receipts")
-    Multi<Order> orders;
+    @Channel("order-receipts-queue")
+    Multi<Order> ordersAmq;
 
     @GET
     @Path("")
     @Produces(MediaType.SERVER_SENT_EVENTS)
-    public Multi<Order> consumer() {
-        return orders;
+    public Multi<Order> consumerAMQ() {
+        return ordersAmq;
     }
+
 }

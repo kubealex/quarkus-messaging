@@ -8,15 +8,15 @@ import io.quarkus.logging.Log;
 import io.smallrye.common.annotation.Blocking;
 
 @ApplicationScoped
-public class OrderProcessor {
+public class OrderProcessorAMQ {
 
     private Random random = new Random();
 
-    @Incoming("order-requests")
-    @Outgoing("order-receipts")
+    @Incoming("order-requests-queue")
+    @Outgoing("order-receipts-queue")
     @Blocking
     public Order process(String orderRequest) throws InterruptedException {
-        Log.info("Order: " + orderRequest + " received on Kafka topic, attaching a price");
+        Log.info("Order: " + orderRequest + " received on AMQ queue, attaching a price");
         Thread.sleep(150);
         return new Order(orderRequest, random.nextInt(100));
     }  
