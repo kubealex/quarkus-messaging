@@ -1,43 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Prices</title>
 
     <link rel="stylesheet" type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
     <link rel="stylesheet" type="text/css"
-          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
 </head>
+
 <body>
-<div class="container">
-    <div class="card">
-        <div class="card-body">
-            <h2 class="card-title">Orders</h2>
-            <button class="btn btn-info" id="request-order">Request Order</button>
-            <div class="orders"></div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">Orders</h2>
+                <button class="btn btn-info" id="request-order">Request Order</button>
+                <div class="orders"></div>
+            </div>
         </div>
     </div>
-</div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $("#request-order").click((event) => {
-        fetch("/orders-amq/request", {method: "POST"})
-        .then(res => res.text())
-        .then(qid => {
-            var row = $(`<h4 class='col-md-12' id='${qid}'>Order # <i>${qid}</i> | <strong>Pending</strong></h4>`);
-            $(".orders").prepend(row);
-        });
+        fetch("/orders-amq/request", { method: "POST" })
+            .then(res => res.text())
+            .then(qid => {
+                var row = $(`<h4 class='col-md-12' id='${qid}'>Order # <i>${qid}</i> | <strong>Pending</strong></h4>`);
+                $(".orders").prepend(row);
+            });
     });
 
     var source = new EventSource("/orders-amq");
     source.onmessage = (event) => {
-      var json = JSON.parse(event.data);
-      console.log("ID: " + json.id + " PRICE: " + json.price)
-      $(`#${json.id}`).html((index, html) => {
-        return html.replace("Pending", `\$\xA0${json.price}`);
-      });
+        var json = JSON.parse(event.data);
+        console.log("ID: " + json.id + " PRICE: " + json.price)
+        $(`#${json.id}`).html((index, html) => {
+            return html.replace("Pending", `\$\xA0${json.price}`);
+        });
     };
 </script>
+
 </html>

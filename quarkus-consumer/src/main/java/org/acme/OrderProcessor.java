@@ -19,5 +19,5 @@ public class OrderProcessor {
         Log.info("Order: " + orderRequest + " received on Kafka topic, attaching a price");
         Thread.sleep(150);
         return new Order(orderRequest, random.nextInt(100));
-    }  
+    }
 }

@@ -4,7 +4,6 @@ public class Order {
     public String id;
     public Integer price;
 
-
     public Order() {}
 
     public Order(String id, Integer price) {

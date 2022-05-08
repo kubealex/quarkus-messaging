@@ -19,5 +19,5 @@ public class OrderProcessorAMQ {
         Log.info("Order: " + orderRequest + " received on AMQ queue, attaching a price");
         Thread.sleep(150);
         return new Order(orderRequest, random.nextInt(100));
-    }  
+    }
 }
